@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Engineering: Foundations to Cloud</title>
+    <style>
+        :root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+
+  --color-bg-1: rgba(59, 130, 246, 0.08);
+  --color-bg-2: rgba(245, 158, 11, 0.08);
+  --color-bg-3: rgba(34, 197, 94, 0.08);
+  --color-bg-4: rgba(239, 68, 68, 0.08);
+  --color-bg-5: rgba(147, 51, 234, 0.08);
+
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  --radius-base: 8px;
+  --radius-lg: 12px;
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: rgba(167, 169, 169, 0.7);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-border: rgba(119, 124, 124, 0.3);
+  }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-base);
+    background: var(--color-background);
+    color: var(--color-text);
+    overflow: hidden;
+    height: 100vh;
+}
+
+.presentation-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.slide-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-32);
+    overflow: hidden;
+}
+
+.slide {
+    display: none;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 1200px;
+    height: 90%;
+    max-height: 700px;
+    padding: 60px 80px;
+    overflow-y: auto;
+    animation: slideIn 0.5s ease;
+}
+
+.slide.active {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.slide h1 {
+    font-size: 48px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-24);
+    line-height: 1.2;
+}
+
+.slide h2 {
+    font-size: 36px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-32);
+    border-bottom: 3px solid var(--color-primary);
+    padding-bottom: var(--space-12);
+}
+
+.slide h3 {
+    font-size: 24px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin-top: var(--space-24);
+    margin-bottom: var(--space-16);
+}
+
+.subtitle {
+    font-size: 24px;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-32);
+}
+
+.definition {
+    background: var(--color-bg-1);
+    padding: var(--space-24);
+    border-radius: var(--radius-base);
+    border-left: 4px solid var(--color-primary);
+    margin-bottom: var(--space-32);
+    font-size: var(--font-size-xl);
+    line-height: 1.6;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    font-size: var(--font-size-xl);
+    line-height: 1.8;
+    margin-bottom: var(--space-16);
+    padding-left: var(--space-32);
+    position: relative;
+}
+
+ul li::before {
+    content: "●";
+    color: var(--color-primary);
+    font-size: 20px;
+    position: absolute;
+    left: 0;
+}
+
+.two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-32);
+    margin-top: var(--space-24);
+}
+
+.column {
+    background: var(--color-bg-1);
+    padding: var(--space-24);
+    border-radius: var(--radius-base);
+}
+
+.column h3 {
+    margin-top: 0;
+    color: var(--color-primary);
+}
+
+.architecture-box {
+    background: var(--color-bg-2);
+    padding: var(--space-24);
+    border-radius: var(--radius-base);
+    margin: var(--space-24) 0;
+    font-family: monospace;
+    font-size: var(--font-size-base);
+    line-height: 1.8;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-16);
+    margin-top: var(--space-24);
+}
+
+.service-item {
+    background: var(--color-bg-3);
+    padding: var(--space-16);
+    border-radius: var(--radius-base);
+    border-left: 3px solid var(--color-primary);
+}
+
+.service-item strong {
+    color: var(--color-primary);
+    font-size: var(--font-size-lg);
+    display: block;
+    margin-bottom: var(--space-8);
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-24) var(--space-32);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+}
+
+.nav-buttons {
+    display: flex;
+    gap: var(--space-12);
+}
+
+button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: var(--space-12) var(--space-24);
+    border-radius: var(--radius-base);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: var(--color-primary-hover);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.slide-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-24);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+}
+
+.progress-bar {
+    width: 200px;
+    height: 6px;
+    background: var(--color-bg-1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.3s;
+}
+
+.speaker-notes {
+    display: none;
+    background: var(--color-bg-4);
+    padding: var(--space-24);
+    border-radius: var(--radius-base);
+    margin-top: var(--space-32);
+    border-left: 4px solid var(--color-orange-500);
+}
+
+.speaker-notes.visible {
+    display: block;
+}
+
+.speaker-notes h4 {
+    color: var(--color-orange-500);
+    margin-bottom: var(--space-16);
+    font-size: var(--font-size-lg);
+}
+
+.speaker-notes p {
+    margin-bottom: var(--space-12);
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+}
+
+.title-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.title-slide h1 {
+    font-size: 56px;
+    margin-bottom: var(--space-24);
+}
+
+.comparison-table {
+    margin-top: var(--space-24);
+}
+
+.comparison-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-12);
+    margin-bottom: var(--space-12);
+    font-size: var(--font-size-base);
+}
+
+.comparison-row div {
+    padding: var(--space-12);
+    background: var(--color-bg-1);
+    border-radius: var(--radius-base);
+}
+
+.comparison-row.header div {
+    background: var(--color-primary);
+    color: white;
+    font-weight: var(--font-weight-bold);
+}
+
+.highlight-box {
+    background: var(--color-bg-5);
+    padding: var(--space-20);
+    border-radius: var(--radius-base);
+    margin: var(--space-20) 0;
+}
+
+.toc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-16);
+    margin-top: var(--space-32);
+}
+
+.toc-item {
+    background: var(--color-bg-1);
+    padding: var(--space-20);
+    border-radius: var(--radius-base);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-medium);
+    border-left: 4px solid var(--color-primary);
+}
+
+.thank-you {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+
+.thank-you h1 {
+    font-size: 64px;
+    margin-bottom: var(--space-32);
+}
+
+.thank-you p {
+    font-size: 28px;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-16);
+}
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-container">
+            <!-- Slide 1: Title -->
+            <div class="slide active" data-slide="1">
+                <div class="title-slide">
+                    <h1>Data Engineering:<br>Foundations to Cloud</h1>
+                    <p class="subtitle">A Comprehensive Guide for Students</p>
+                </div>
+                <div class="speaker-notes" id="notes-1">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p>Welcome students! Today we'll explore the exciting field of data engineering - the backbone of modern data-driven organizations.</p>
+                    <p>This presentation covers everything from fundamental concepts to cloud platforms like AWS and GCP.</p>
+                    <p>Feel free to ask questions throughout. Press 'S' to toggle these speaker notes on any slide.</p>
+                </div>
+            </div>
+
+            <!-- Slide 2: Table of Contents -->
+            <div class="slide" data-slide="2">
+                <h2>Table of Contents</h2>
+                <div class="toc-grid">
+                    <div class="toc-item">What is Data Engineering?</div>
+                    <div class="toc-item">What Data Engineers Do</div>
+                    <div class="toc-item">Core Concepts</div>
+                    <div class="toc-item">ETL &amp; ELT Pipelines</div>
+                    <div class="toc-item">AWS Data Engineering</div>
+                    <div class="toc-item">Snowflake</div>
+                    <div class="toc-item">dbt (Data Build Tool)</div>
+                    <div class="toc-item">GCP Data Engineering</div>
+                    <div class="toc-item">Architecture Examples</div>
+                </div>
+                <div class="speaker-notes" id="notes-2">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p>This presentation is structured to build your knowledge progressively.</p>
+                    <p>We start with fundamentals, then explore specific technologies and cloud platforms.</p>
+                    <p>Each section includes real-world examples to help you understand practical applications.</p>
+                </div>
+            </div>
+
+            <!-- Slide 3: What is Data Engineering? -->
+            <div class="slide" data-slide="3">
+                <h2>What is Data Engineering?</h2>
+                <div class="definition">
+                    Data engineering is the practice of designing, building, and maintaining systems for collecting, storing, processing, and analyzing large-scale data.
+                </div>
+                <h3>Key Points</h3>
+                <ul>
+                    <li>Prepares data infrastructure for analytics</li>
+                    <li>Focuses on data pipelines and architecture</li>
+                    <li>Ensures data quality and accessibility</li>
+                    <li>Foundation for data science and analytics</li>
+                </ul>
+                <div class="speaker-notes" id="notes-3">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Evolution:</strong> Data engineering emerged as organizations needed to handle increasing volumes of data from various sources.</p>
+                    <p><strong>Analogy:</strong> Think of data engineers as architects who build the highways for data to travel. Just as highways connect cities, data pipelines connect data sources to analytics systems.</p>
+                    <p><strong>Example:</strong> Netflix processes billions of events daily to power recommendations - data engineers build those systems that capture every view, pause, and search.</p>
+                    <p><strong>Key Distinction:</strong> Data engineers BUILD infrastructure; data scientists USE it for analysis. Both roles are complementary and essential.</p>
+                </div>
+            </div>
+
+            <!-- Slide 4: What Data Engineers Do -->
+            <div class="slide" data-slide="4">
+                <h2>What Data Engineers Do</h2>
+                <ul>
+                    <li>Design and build data pipelines</li>
+                    <li>Develop ETL/ELT processes</li>
+                    <li>Manage data warehouses and data lakes</li>
+                    <li>Ensure data quality and integrity</li>
+                    <li>Optimize data storage and retrieval</li>
+                    <li>Collaborate with data scientists and analysts</li>
+                    <li>Implement data security and governance</li>
+                </ul>
+                <div class="speaker-notes" id="notes-4">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Daily Tasks:</strong> Daily tasks vary but revolve around ensuring smooth data flow. A data engineer might spend mornings reviewing pipeline failures, afternoons optimizing queries, and evenings deploying new features.</p>
+                    <p><strong>Long-term Impact:</strong> Pipeline development might take weeks, but ensures years of automated data processing, saving countless hours of manual work.</p>
+                    <p><strong>Example Scenario:</strong> E-commerce company needs to consolidate data from website clickstreams, mobile app events, payment processor, warehouse inventory system, and customer service logs.</p>
+                    <p><strong>The Goal:</strong> Data engineers design the system so analysts can query unified data without worrying about where it came from or how it got there.</p>
+                    <p><strong>Common Question:</strong> "How is this different from database administration?" - DBAs maintain databases; data engineers build entire data ecosystems.</p>
+                </div>
+            </div>
+
+            <!-- Slide 5: Core Concepts - Data Pipelines -->
+            <div class="slide" data-slide="5">
+                <h2>Core Concepts: Data Pipelines</h2>
+                <div class="definition">
+                    Automated workflows that move data from source to destination
+                </div>
+                <h3>Components</h3>
+                <ul>
+                    <li><strong>Extract:</strong> Collect data from various sources</li>
+                    <li><strong>Transform:</strong> Clean, enrich, and structure data</li>
+                    <li><strong>Load:</strong> Store data in target destination</li>
+                </ul>
+                <h3>Processing Types</h3>
+                <ul>
+                    <li><strong>Batch Processing:</strong> Process data in scheduled intervals</li>
+                    <li><strong>Stream Processing:</strong> Process data in real-time</li>
+                    <li><strong>Micro-batch:</strong> Small batches processed frequently</li>
+                </ul>
+                <div class="speaker-notes" id="notes-5">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Pipeline Analogy:</strong> Think of a pipeline like an assembly line in a factory. Each stage processes data and passes it to the next stage.</p>
+                    <p><strong>Batch vs Stream:</strong> Batch is like processing mail once a day; streaming is like instant messaging.</p>
+                    <p><strong>Tools Example:</strong> Apache Airflow schedules batch jobs, Apache Kafka handles streaming, Apache Spark does both.</p>
+                    <p><strong>Real Example:</strong> A bank might use batch processing for daily reports but stream processing for fraud detection.</p>
+                </div>
+            </div>
+
+            <!-- Slide 6: Core Concepts - Data Storage -->
+            <div class="slide" data-slide="6">
+                <h2>Core Concepts: Data Storage</h2>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <strong>Data Warehouse</strong>
+                        <p>Structured, processed data optimized for analytics. Fast queries on clean data.</p>
+                        <p><em>Examples:</em> Amazon Redshift, Snowflake, BigQuery</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Data Lake</strong>
+                        <p>Raw data in native format. Store everything first, process later.</p>
+                        <p><em>Examples:</em> Amazon S3, Azure Data Lake, Google Cloud Storage</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Data Lakehouse</strong>
+                        <p>Combines benefits of both - structured queries on raw data.</p>
+                        <p><em>Examples:</em> Databricks, Snowflake</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Operational Database</strong>
+                        <p>Powers applications with transactional data (OLTP).</p>
+                        <p><em>Examples:</em> PostgreSQL, MongoDB, DynamoDB</p>
+                    </div>
+                </div>
+                <div class="speaker-notes" id="notes-6">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Key Difference:</strong> Warehouses are like organized libraries; lakes are like storage units with everything boxed up.</p>
+                    <p><strong>When to Use What:</strong> Use data lakes for raw historical data, warehouses for business intelligence and reporting, operational DBs for applications.</p>
+                    <p><strong>Modern Trend:</strong> Lakehouses are gaining popularity because they offer warehouse speed on lake flexibility.</p>
+                    <p><strong>Cost Consideration:</strong> Data lakes are cheaper to store but more expensive to query; warehouses are optimized for queries.</p>
+                </div>
+            </div>
+
+            <!-- Slide 7: ETL vs ELT -->
+            <div class="slide" data-slide="7">
+                <h2>ETL vs ELT</h2>
+                <div class="two-column">
+                    <div class="column">
+                        <h3>ETL (Extract, Transform, Load)</h3>
+                        <ul>
+                            <li>Transform before loading</li>
+                            <li>Clean data first</li>
+                            <li>Smaller storage footprint</li>
+                            <li>Traditional approach</li>
+                            <li>Requires upfront decisions</li>
+                            <li>Better for structured data</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <h3>ELT (Extract, Load, Transform)</h3>
+                        <ul>
+                            <li>Load raw data first</li>
+                            <li>Transform in warehouse</li>
+                            <li>More flexible</li>
+                            <li>Modern cloud approach</li>
+                            <li>Enables ad-hoc analysis</li>
+                            <li>Leverage warehouse power</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="speaker-notes" id="notes-7">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Historical Context:</strong> ETL was standard when storage was expensive. ELT became popular with cheap cloud storage and powerful warehouses.</p>
+                    <p><strong>Practical Difference:</strong> ETL: You decide upfront what transformations to apply. ELT: Load everything, decide later what you need.</p>
+                    <p><strong>Which is Better?:</strong> Neither - it depends on your use case. Many organizations use both.</p>
+                    <p><strong>Example:</strong> Use ETL for compliance (remove PII before storage), ELT for exploratory analytics (keep all raw data).</p>
+                </div>
+            </div>
+
+            <!-- Slide 8: Example - ETL Process -->
+            <div class="slide" data-slide="8">
+                <h2>Example: ETL Process</h2>
+                <h3>Use Case: E-commerce Sales Data</h3>
+                <div class="highlight-box">
+                    <h3>Extract</h3>
+                    <ul>
+                        <li>Website clickstream logs (JSON files in S3)</li>
+                        <li>Payment system API (Stripe)</li>
+                        <li>Inventory database (PostgreSQL)</li>
+                        <li>Customer data (Salesforce CRM)</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <h3>Transform</h3>
+                    <ul>
+                        <li>Join customer data with purchase records</li>
+                        <li>Standardize date/time formats across systems</li>
+                        <li>Remove duplicate orders</li>
+                        <li>Calculate metrics: total revenue, average order value</li>
+                        <li>Clean and validate addresses</li>
+                        <li>Handle missing values and outliers</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <h3>Load</h3>
+                    <ul>
+                        <li>Store in Redshift data warehouse</li>
+                        <li>Create aggregated tables for reporting</li>
+                        <li>Enable analysts to query for daily dashboards</li>
+                    </ul>
+                </div>
+                <div class="speaker-notes" id="notes-8">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Step-by-Step Walkthrough:</strong> Imagine an online retailer processing thousands of orders daily.</p>
+                    <p><strong>Extract Phase:</strong> Pull orders from PostgreSQL database every hour, customer data from Salesforce API, inventory levels from MongoDB warehouse system. Each source has different formats and structures.</p>
+                    <p><strong>Transform Phase:</strong> Join tables on customer_id, calculate revenue metrics (quantity × price), clean address fields (standardize state abbreviations), handle edge cases like refunds and cancellations.</p>
+                    <p><strong>Load Phase:</strong> Insert into Redshift warehouse where analysts can query. Create views for common reports like daily_sales_summary.</p>
+                    <p><strong>Frequency:</strong> This process might run every hour to keep dashboards fresh for business users.</p>
+                    <p><strong>Error Handling:</strong> What if Salesforce API is down? Pipeline should retry with exponential backoff, alert on-call engineer if still failing after 3 attempts.</p>
+                </div>
+            </div>
+
+            <!-- Slide 9: AWS Data Engineering - Overview -->
+            <div class="slide" data-slide="9">
+                <h2>AWS Data Engineering</h2>
+                <div class="definition">
+                    Amazon Web Services - Leading cloud platform for data engineering
+                </div>
+                <h3>Key Benefits</h3>
+                <ul>
+                    <li><strong>Scalability:</strong> Handle petabytes of data</li>
+                    <li><strong>Managed Services:</strong> Less infrastructure management</li>
+                    <li><strong>Pay-as-you-go:</strong> Cost-effective pricing model</li>
+                    <li><strong>Comprehensive Suite:</strong> Tools for every data need</li>
+                    <li><strong>Integration:</strong> Services work seamlessly together</li>
+                    <li><strong>Global Reach:</strong> Data centers worldwide</li>
+                </ul>
+                <div class="speaker-notes" id="notes-9">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>AWS Dominance:</strong> AWS is the market leader in cloud computing, with the most mature data engineering ecosystem.</p>
+                    <p><strong>Service Variety:</strong> AWS offers 200+ services, but we'll focus on the core data engineering ones.</p>
+                    <p><strong>Real Adoption:</strong> Companies like Netflix, Airbnb, and Spotify run massive data pipelines on AWS.</p>
+                    <p><strong>Learning Path:</strong> Start with S3 and basic ETL, then explore streaming and advanced analytics.</p>
+                </div>
+            </div>
+
+            <!-- Slide 10: AWS Core Services -->
+            <div class="slide" data-slide="10">
+                <h2>AWS Data Engineering: Core Services</h2>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <strong>Amazon S3</strong>
+                        <p>Scalable object storage. Foundation for data lakes. Store any amount of data at low cost.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>AWS Glue</strong>
+                        <p>Managed ETL service. Automatic schema discovery. Serverless Spark jobs.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Amazon Redshift</strong>
+                        <p>Petabyte-scale data warehouse. Fast SQL queries. Columnar storage for analytics.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Amazon Kinesis</strong>
+                        <p>Real-time streaming data. Process millions of events per second.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>AWS Lambda</strong>
+                        <p>Serverless compute. Run code without servers. Event-driven data processing.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Amazon Athena</strong>
+                        <p>Query S3 data using SQL. No infrastructure needed. Pay per query.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Amazon EMR</strong>
+                        <p>Managed Hadoop and Spark. Big data processing at scale.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>AWS Step Functions</strong>
+                        <p>Orchestrate workflows. Coordinate multiple services. Visual pipeline builder.</p>
+                    </div>
+                </div>
+                <div class="speaker-notes" id="notes-10">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>S3 as Foundation:</strong> Almost every AWS data pipeline starts with S3. It's cheap, durable (99.999999999% durability), and integrates with everything.</p>
+                    <p><strong>Glue Details:</strong> Glue crawlers automatically discover your data schema. Write ETL in Python or Scala. It's serverless - you don't manage infrastructure.</p>
+                    <p><strong>Redshift Use Case:</strong> When you need sub-second query performance on billions of rows. Uses columnar storage which is perfect for analytics.</p>
+                    <p><strong>Kinesis vs Kafka:</strong> Kinesis is AWS-managed streaming; Kafka is open-source. Kinesis is easier to start with.</p>
+                    <p><strong>Lambda for Data:</strong> Great for small transformations, file processing, event-driven workflows. Limited to 15-minute execution time.</p>
+                    <p><strong>Service Combinations:</strong> Common pattern: S3 → Glue → Redshift → QuickSight for batch analytics. Kinesis → Lambda → S3 for streaming.</p>
+                </div>
+            </div>
+
+            <!-- Slide 11: AWS Architecture Example -->
+            <div class="slide" data-slide="11">
+                <h2>AWS Architecture Example</h2>
+                <h3>Batch Data Pipeline</h3>
+                <div class="architecture-box">
+Data Sources (APIs, Databases, Files)
+    ↓
+    ↓ [Ingestion]
+    ↓
+Amazon S3 (Raw Data Lake)
+    ↓
+    ↓ [ETL Processing]
+    ↓
+AWS Glue
+    ↓
+    ↓ [Transformed Data]
+    ↓
+Amazon Redshift (Data Warehouse)
+    ↓
+    ↓ [Visualization]
+    ↓
+Amazon QuickSight (BI Dashboards)
+                </div>
+                <h3>Real-Time Stream Processing</h3>
+                <div class="architecture-box">
+Application Events / IoT Sensors
+    ↓
+Amazon Kinesis Data Streams
+    ↓
+AWS Lambda (Process &amp; Filter)
+    ↓
+Amazon S3 + Amazon Redshift
+                </div>
+                <div class="speaker-notes" id="notes-11">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Batch Pipeline Walkthrough:</strong> This is the most common AWS data architecture. Start by ingesting data from various sources into S3 as your central data lake.</p>
+                    <p><strong>Why S3 First?:</strong> S3 is incredibly cheap and durable. Store everything there first, then decide what to process.</p>
+                    <p><strong>Glue's Role:</strong> Glue jobs run on schedule (e.g., every hour) to transform raw S3 data. It handles schema evolution, data quality checks, and complex transformations.</p>
+                    <p><strong>Redshift Analytics:</strong> Transformed data lands in Redshift where analysts run SQL queries. Redshift is optimized for aggregations and joins.</p>
+                    <p><strong>Real-Time Branch:</strong> For use cases needing immediate insights (fraud detection, monitoring), use Kinesis to process events as they arrive.</p>
+                    <p><strong>Lambda Functions:</strong> Each Lambda processes one event - filter, enrich, or route to different destinations based on content.</p>
+                    <p><strong>Cost Optimization:</strong> S3 is pennies per GB, Glue charges per second of job runtime, Redshift charges for nodes. Design accordingly.</p>
+                </div>
+            </div>
+
+            <!-- Slide 12: Snowflake Overview -->
+            <div class="slide" data-slide="12">
+                <h2>Snowflake</h2>
+                <div class="definition">
+                    Cloud-native data warehouse platform built for the cloud era
+                </div>
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Separation of Storage &amp; Compute:</strong> Scale independently, optimize costs</li>
+                    <li><strong>Elastic Scalability:</strong> Resize warehouses instantly</li>
+                    <li><strong>Semi-Structured Data:</strong> Native support for JSON, Avro, Parquet</li>
+                    <li><strong>Data Sharing:</strong> Share live data with other organizations</li>
+                    <li><strong>Multi-Cloud:</strong> Runs on AWS, Azure, and GCP</li>
+                    <li><strong>Zero Maintenance:</strong> No indexes, partitions, or tuning needed</li>
+                </ul>
+                <div class="speaker-notes" id="notes-12">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>What Makes Snowflake Special:</strong> Unlike traditional databases, Snowflake was built for the cloud from day one. No legacy baggage.</p>
+                    <p><strong>Storage-Compute Separation:</strong> This is revolutionary. You can have massive data storage but only pay for compute when running queries. Pause warehouses when not in use.</p>
+                    <p><strong>Practical Example:</strong> Your data warehouse might have 100TB of data but only process queries during business hours. With Snowflake, pause compute at night - pay nothing for compute during those hours.</p>
+                    <p><strong>Semi-Structured Data:</strong> Store and query JSON directly without complex ETL. Game-changer for modern applications that generate JSON logs.</p>
+                    <p><strong>Data Sharing:</strong> Share data with partners without copying. They query your data in real-time. Common in supply chain, healthcare, finance.</p>
+                    <p><strong>Pricing Model:</strong> Pay for storage separately from compute. Compute billed per-second of warehouse usage.</p>
+                </div>
+            </div>
+
+            <!-- Slide 13: Snowflake Architecture -->
+            <div class="slide" data-slide="13">
+                <h2>Snowflake Architecture</h2>
+                <h3>Three-Layer Design</h3>
+                <div class="highlight-box">
+                    <h3>1. Storage Layer (Database Storage)</h3>
+                    <ul>
+                        <li>Cloud-based object storage (S3, Azure Blob, GCS)</li>
+                        <li>Columnar format with compression</li>
+                        <li>Micro-partitions for efficient querying</li>
+                        <li>Automatic optimization and clustering</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <h3>2. Compute Layer (Virtual Warehouses)</h3>
+                    <ul>
+                        <li>MPP (Massively Parallel Processing) clusters</li>
+                        <li>Independent scaling - add/remove warehouses</li>
+                        <li>Pause and resume without data loss</li>
+                        <li>Multiple warehouses can query same data</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <h3>3. Services Layer (Cloud Services)</h3>
+                    <ul>
+                        <li>Authentication and access control</li>
+                        <li>Query optimization and compilation</li>
+                        <li>Metadata management</li>
+                        <li>Transaction coordination</li>
+                    </ul>
+                </div>
+                <div class="speaker-notes" id="notes-13">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Architecture Innovation:</strong> This three-layer architecture is what makes Snowflake unique and powerful.</p>
+                    <p><strong>Storage Layer:</strong> Your data is stored in Snowflake's format in cloud storage. You never access it directly - always through Snowflake's compute layer.</p>
+                    <p><strong>Micro-partitions:</strong> Snowflake automatically divides tables into small chunks (50-500MB). This enables parallel processing and efficient pruning.</p>
+                    <p><strong>Compute Layer Flexibility:</strong> You can have different-sized warehouses for different workloads. Large warehouse for heavy ETL, small for ad-hoc queries.</p>
+                    <p><strong>Virtual Warehouse Sizes:</strong> X-Small, Small, Medium, Large, X-Large, 2X, 3X, 4X. Each size doubles the compute power (and cost).</p>
+                    <p><strong>Services Layer:</strong> This runs constantly but you don't pay extra for it (included in compute costs). Handles all the "smart" stuff.</p>
+                    <p><strong>Comparison:</strong> Traditional databases couple storage and compute. Snowflake separates them, giving unprecedented flexibility.</p>
+                </div>
+            </div>
+
+            <!-- Slide 14: Snowflake Use Cases -->
+            <div class="slide" data-slide="14">
+                <h2>Snowflake Use Cases</h2>
+                <ul>
+                    <li><strong>Enterprise Data Warehousing:</strong> Centralize data from all sources for analytics</li>
+                    <li><strong>Data Lake Modernization:</strong> Query data lake files without loading</li>
+                    <li><strong>Real-Time Data Sharing:</strong> Share live data across organizations</li>
+                    <li><strong>Data Science &amp; ML:</strong> Power ML models with fresh data</li>
+                    <li><strong>Business Intelligence:</strong> Fast dashboards and reports</li>
+                </ul>
+                <h3>Real-World Example</h3>
+                <div class="highlight-box">
+                    <strong>Retail Company:</strong> 500+ stores across the country
+                    <ul>
+                        <li>Consolidate sales, inventory, customer data in Snowflake</li>
+                        <li>Real-time dashboards for store managers</li>
+                        <li>Predictive analytics for inventory optimization</li>
+                        <li>Share sales data with suppliers for better forecasting</li>
+                        <li>Support data science team building recommendation engine</li>
+                    </ul>
+                    <p><em>Result: 10x faster queries, 40% reduction in infrastructure costs</em></p>
+                </div>
+                <div class="speaker-notes" id="notes-14">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Data Warehousing:</strong> Classic use case - replace legacy systems like Teradata or Oracle. Companies see massive performance gains and cost reductions.</p>
+                    <p><strong>Data Lake Modernization:</strong> With external tables, Snowflake can query Parquet files in S3 without loading them. Best of both worlds.</p>
+                    <p><strong>Data Sharing Example:</strong> Healthcare provider shares patient outcomes with research institutions. No data copies, instant access, governed security.</p>
+                    <p><strong>Retail Example Walkthrough:</strong> Before Snowflake, this company had data siloed in different systems. Regional managers couldn't see nationwide trends. ETL jobs took hours.</p>
+                    <p><strong>After Implementation:</strong> All data flows into Snowflake. Dashboards update every 15 minutes. Analysts can join sales with weather data to understand patterns.</p>
+                    <p><strong>Cost Savings:</strong> Eliminated expensive legacy licenses. Pausing warehouses during off-hours saves 60% of compute costs.</p>
+                </div>
+            </div>
+
+            <!-- Slide 15: dbt Overview -->
+            <div class="slide" data-slide="15">
+                <h2>dbt (Data Build Tool)</h2>
+                <div class="definition">
+                    SQL-based transformation tool that enables analytics engineers to transform data in the warehouse
+                </div>
+                <h3>Key Capabilities</h3>
+                <ul>
+                    <li><strong>SQL Transformations:</strong> Write transformations in SQL, dbt handles the rest</li>
+                    <li><strong>Version Control:</strong> All transformations in Git</li>
+                    <li><strong>Automated Testing:</strong> Data quality tests built-in</li>
+                    <li><strong>Documentation:</strong> Auto-generated lineage and docs</li>
+                    <li><strong>Modularity:</strong> Reusable SQL models</li>
+                    <li><strong>Works With:</strong> Snowflake, BigQuery, Redshift, Databricks, Postgres</li>
+                </ul>
+                <div class="speaker-notes" id="notes-15">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>The dbt Revolution:</strong> Before dbt, data transformations were scattered in stored procedures, ETL tools, or Python scripts. Hard to maintain and test.</p>
+                    <p><strong>Philosophy:</strong> dbt believes transformations should happen in the warehouse, not before loading. This is the ELT pattern.</p>
+                    <p><strong>Who Uses dbt:</strong> Analytics engineers - the role between data engineer and analyst. They know SQL well and want to apply software engineering practices.</p>
+                    <p><strong>Git Integration:</strong> Every transformation is version controlled. You can review changes in pull requests, just like application code.</p>
+                    <p><strong>Why It Matters:</strong> dbt brings software engineering best practices (testing, version control, CI/CD) to data analytics.</p>
+                    <p><strong>Adoption:</strong> Used by thousands of companies including GitLab, Warby Parker, and JetBlue.</p>
+                </div>
+            </div>
+
+            <!-- Slide 16: dbt How It Works -->
+            <div class="slide" data-slide="16">
+                <h2>dbt: How It Works</h2>
+                <div class="highlight-box">
+                    <h3>Workflow</h3>
+                    <ol style="list-style: decimal; padding-left: 40px;">
+                        <li style="padding-left: 0;">Write transformations in SQL (.sql files)</li>
+                        <li style="padding-left: 0;">Define dependencies using ref() function</li>
+                        <li style="padding-left: 0;">dbt compiles SQL with correct table references</li>
+                        <li style="padding-left: 0;">Executes in your data warehouse</li>
+                        <li style="padding-left: 0;">Creates tables or views as specified</li>
+                        <li style="padding-left: 0;">Generates documentation and lineage graphs</li>
+                        <li style="padding-left: 0;">Runs tests to ensure data quality</li>
+                    </ol>
+                </div>
+                <h3>Example SQL Model</h3>
+                <div class="architecture-box">
+-- models/customer_orders.sql
+
+SELECT
+    c.customer_id,
+    c.customer_name,
+    COUNT(o.order_id) as total_orders,
+    SUM(o.amount) as total_spend
+FROM {{ ref('customers') }} c
+LEFT JOIN {{ ref('orders') }} o
+    ON c.customer_id = o.customer_id
+GROUP BY 1, 2
+                </div>
+                <div class="speaker-notes" id="notes-16">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>The ref() Function:</strong> This is dbt's magic. ref('customers') tells dbt this model depends on the customers model. dbt builds dependency graph automatically.</p>
+                    <p><strong>Compilation:</strong> dbt replaces {{ ref('customers') }} with the actual table name in your warehouse. Handles different environments (dev/prod).</p>
+                    <p><strong>Execution:</strong> When you run dbt, it executes models in the correct order based on dependencies. Customers before customer_orders.</p>
+                    <p><strong>Materialization:</strong> You choose how to materialize: as table (full refresh), view (always fresh), or incremental (append new rows).</p>
+                    <p><strong>Documentation:</strong> dbt generates beautiful docs showing all models, their columns, and how they connect. Searchable and always up-to-date.</p>
+                    <p><strong>Development Flow:</strong> Develop locally against dev schema, test, commit to Git, CI runs tests, deploy to production.</p>
+                </div>
+            </div>
+
+            <!-- Slide 17: dbt Key Features -->
+            <div class="slide" data-slide="17">
+                <h2>dbt: Key Features</h2>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <strong>Materialization Types</strong>
+                        <p><strong>Table:</strong> Full rebuild each run</p>
+                        <p><strong>View:</strong> No storage, query on demand</p>
+                        <p><strong>Incremental:</strong> Only process new data</p>
+                        <p><strong>Ephemeral:</strong> CTEs, not materialized</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Testing</strong>
+                        <p><strong>unique:</strong> No duplicate values</p>
+                        <p><strong>not_null:</strong> No missing values</p>
+                        <p><strong>relationships:</strong> Foreign key checks</p>
+                        <p><strong>accepted_values:</strong> Value in allowed list</p>
+                        <p><strong>Custom tests:</strong> Your own SQL logic</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Documentation</strong>
+                        <p>YAML files describe models and columns</p>
+                        <p>Auto-generated lineage graphs</p>
+                        <p>Searchable data catalog</p>
+                        <p>Embedded in version control</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Deployment</strong>
+                        <p>Development → Staging → Production</p>
+                        <p>CI/CD integration (GitHub Actions)</p>
+                        <p>Scheduled runs with orchestration</p>
+                        <p>dbt Cloud or self-hosted</p>
+                    </div>
+                </div>
+                <div class="speaker-notes" id="notes-17">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Materialization Choice:</strong> Tables for frequently queried data, views for simple transformations, incremental for large event tables.</p>
+                    <p><strong>Incremental Example:</strong> Processing 1 billion events? First run processes all, subsequent runs only process new events based on timestamp.</p>
+                    <p><strong>Testing Power:</strong> Tests run after building models. If tests fail, you know immediately. Example: test that revenue is always positive.</p>
+                    <p><strong>Custom Tests:</strong> Write SQL that returns failing rows. Example: "SELECT * FROM orders WHERE order_date &gt; ship_date" should return 0 rows.</p>
+                    <p><strong>Documentation Value:</strong> New team members can explore the data catalog to understand what data exists and how it's connected.</p>
+                    <p><strong>CI/CD Pattern:</strong> Pull request triggers dbt run in CI environment. Tests must pass before merge. Production runs on schedule via Airflow.</p>
+                    <p><strong>dbt Cloud vs Core:</strong> Core is free and open-source. Cloud adds IDE, scheduling, and monitoring. Both execute the same transformations.</p>
+                </div>
+            </div>
+
+            <!-- Slide 18: dbt Example -->
+            <div class="slide" data-slide="18">
+                <h2>dbt Example: Customer Analytics</h2>
+                <h3>Scenario</h3>
+                <div class="definition">
+                    Build a customer_lifetime_value model that combines customer data, orders, and product information to calculate metrics for marketing team.
+                </div>
+                <h3>dbt Workflow</h3>
+                <div class="highlight-box">
+                    <strong>1. Source Configuration:</strong> Define raw tables in schema.yml
+                    <br><strong>2. Staging Models:</strong> Clean and standardize raw data
+                    <br><strong>3. Intermediate Models:</strong> Join customers with orders
+                    <br><strong>4. Mart Models:</strong> Calculate business metrics
+                    <br><strong>5. Tests:</strong> Ensure customer_id is unique, revenue &gt; 0
+                    <br><strong>6. Documentation:</strong> Auto-generated with field descriptions
+                </div>
+                <h3>What dbt Handles Automatically</h3>
+                <ul>
+                    <li>Dependency management and execution order</li>
+                    <li>Table creation and updates in warehouse</li>
+                    <li>Data quality test execution</li>
+                    <li>Documentation generation with lineage</li>
+                    <li>Development vs production environments</li>
+                </ul>
+                <div class="speaker-notes" id="notes-18">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Project Structure:</strong> models/staging/ has raw data cleaning, models/marts/marketing/ has business logic.</p>
+                    <p><strong>Staging Layer:</strong> stg_customers.sql renames columns, casts types, filters out test accounts. Each source gets a staging model.</p>
+                    <p><strong>Intermediate Layer:</strong> int_customer_orders.sql joins staging models, calculates order-level metrics.</p>
+                    <p><strong>Mart Layer:</strong> customer_lifetime_value.sql aggregates to customer level, calculates LTV, segments customers.</p>
+                    <p><strong>Testing:</strong> Test that every customer in customer_lifetime_value exists in stg_customers. Test that total_revenue = sum of order amounts.</p>
+                    <p><strong>Impact:</strong> Marketing team gets reliable, tested data. If source data changes, tests catch issues before reaching dashboards.</p>
+                    <p><strong>Maintenance:</strong> When business logic changes (new way to calculate LTV), update the SQL, test locally, deploy through Git. Full audit trail.</p>
+                </div>
+            </div>
+
+            <!-- Slide 19: GCP Overview -->
+            <div class="slide" data-slide="19">
+                <h2>GCP Data Engineering</h2>
+                <div class="definition">
+                    Google Cloud Platform - Google's cloud computing platform with powerful data and analytics services
+                </div>
+                <h3>Key Strengths</h3>
+                <ul>
+                    <li><strong>Serverless Architecture:</strong> Fully-managed, no infrastructure</li>
+                    <li><strong>BigQuery:</strong> Industry-leading data warehouse</li>
+                    <li><strong>ML Integration:</strong> Built-in machine learning capabilities</li>
+                    <li><strong>Cost-Effective:</strong> Competitive pricing, committed use discounts</li>
+                    <li><strong>Innovation:</strong> Cutting-edge technology from Google</li>
+                    <li><strong>Open Source:</strong> Based on Google's internal tools (Dremel, Borg)</li>
+                </ul>
+                <div class="speaker-notes" id="notes-19">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>GCP's Heritage:</strong> GCP is built on the same infrastructure Google uses internally. BigQuery is based on Dremel, which processes Google's own data.</p>
+                    <p><strong>Serverless Focus:</strong> GCP emphasizes serverless more than AWS. You rarely think about servers or capacity planning.</p>
+                    <p><strong>BigQuery Advantage:</strong> Many companies choose GCP primarily for BigQuery. It's incredibly fast and easy to use.</p>
+                    <p><strong>ML Integration:</strong> Run machine learning models directly in BigQuery using SQL. No need to export data to another platform.</p>
+                    <p><strong>Who Uses GCP:</strong> Spotify, Twitter, Target, and thousands of data-intensive companies.</p>
+                    <p><strong>Comparison:</strong> AWS has more services; GCP has simpler, more integrated services. Azure is strong for Microsoft shops.</p>
+                </div>
+            </div>
+
+            <!-- Slide 20: GCP Core Services -->
+            <div class="slide" data-slide="20">
+                <h2>GCP Data Engineering: Core Services</h2>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <strong>BigQuery</strong>
+                        <p>Serverless data warehouse. SQL queries on petabytes. Built-in ML. Pay per query.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Cloud Dataflow</strong>
+                        <p>Stream and batch processing. Based on Apache Beam. Auto-scaling. Unified programming model.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Cloud Dataproc</strong>
+                        <p>Managed Hadoop and Spark. Create clusters in 90 seconds. Pay per minute.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Cloud Pub/Sub</strong>
+                        <p>Real-time messaging. Global message queue. Decouple producers and consumers.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Cloud Storage</strong>
+                        <p>Object storage for data lakes. Multiple storage classes. Lifecycle management.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Cloud Composer</strong>
+                        <p>Managed Apache Airflow. Workflow orchestration. Schedule and monitor pipelines.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Looker / Data Studio</strong>
+                        <p>BI and visualization. Interactive dashboards. Embedded analytics.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Cloud Data Fusion</strong>
+                        <p>Visual ETL builder. No-code data integration. Pre-built connectors.</p>
+                    </div>
+                </div>
+                <div class="speaker-notes" id="notes-20">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>BigQuery Deep Dive:</strong> Separates storage and compute like Snowflake. Massively parallel processing. Can query 1TB in seconds. Pricing: $5/TB scanned.</p>
+                    <p><strong>BigQuery ML:</strong> Train ML models using SQL. Example: CREATE MODEL for regression, classification, clustering. No Python required.</p>
+                    <p><strong>Dataflow vs Spark:</strong> Dataflow is fully managed and serverless. Spark on Dataproc gives more control. Use Dataflow for simplicity, Dataproc for complex Spark jobs.</p>
+                    <p><strong>Pub/Sub Use Cases:</strong> Application event streaming, IoT sensor data, log aggregation. Guaranteed delivery, at-least-once semantics.</p>
+                    <p><strong>Storage Classes:</strong> Standard for hot data, Nearline for monthly access, Coldline for quarterly, Archive for yearly. Huge cost differences.</p>
+                    <p><strong>Composer Benefits:</strong> Same Airflow you know, but Google manages it. Define DAGs in Python, schedule complex workflows.</p>
+                    <p><strong>Looker Acquisition:</strong> Google acquired Looker for $2.6B. Now integrated deeply with BigQuery for enterprise BI.</p>
+                </div>
+            </div>
+
+            <!-- Slide 21: GCP Architecture Example -->
+            <div class="slide" data-slide="21">
+                <h2>GCP Architecture Example</h2>
+                <h3>Real-Time Analytics Pipeline</h3>
+                <div class="architecture-box">
+Data Sources (Apps, IoT Devices, Databases)
+    ↓
+    ↓ [Real-time Ingestion]
+    ↓
+Cloud Pub/Sub (Message Queue)
+    ↓
+    ↓ [Stream Processing]
+    ↓
+Cloud Dataflow (Apache Beam)
+    ↓
+    ↓ [Storage Branches]
+    ├──→ Cloud Storage (Data Lake - Raw Data)
+    │
+    └──→ BigQuery (Data Warehouse - Analytics)
+         ↓
+         ↓ [Visualization]
+         ↓
+    Looker Studio (Real-time Dashboards)
+                </div>
+                <h3>Batch Processing Path</h3>
+                <div class="architecture-box">
+Cloud Storage (Data Lake)
+    ↓
+Cloud Dataproc (Spark Jobs)
+    ↓
+BigQuery (Aggregated Results)
+    ↓
+Looker (Business Intelligence)
+                </div>
+                <div class="speaker-notes" id="notes-21">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Real-Time Flow:</strong> Applications publish events to Pub/Sub. Dataflow processes streams in real-time - filters, transforms, aggregates.</p>
+                    <p><strong>Dual Storage:</strong> Raw events go to Cloud Storage for historical analysis. Processed events go to BigQuery for immediate querying.</p>
+                    <p><strong>Example Use Case:</strong> E-commerce site tracking user behavior. Events published as users browse, add to cart, purchase.</p>
+                    <p><strong>Dataflow Processing:</strong> Calculate metrics like items viewed per session, conversion rates, popular products. Window data into 1-minute intervals.</p>
+                    <p><strong>BigQuery Streaming:</strong> Dataflow writes to BigQuery in real-time. Dashboards show metrics with seconds of latency.</p>
+                    <p><strong>Batch Processing:</strong> For heavy computations (ML training, complex joins), run Spark jobs on Dataproc against Cloud Storage data.</p>
+                    <p><strong>Cost Optimization:</strong> Pub/Sub charges per GB, Dataflow auto-scales workers, BigQuery charges for storage + queries. Design for efficiency.</p>
+                    <p><strong>Monitoring:</strong> Cloud Monitoring tracks pipeline health. Set alerts for high latency, errors, or unusual data patterns.</p>
+                </div>
+            </div>
+
+            <!-- Slide 22: Real-World Streaming Example -->
+            <div class="slide" data-slide="22">
+                <h2>Real-World Example: Streaming</h2>
+                <h3>Use Case: Real-Time Fraud Detection in Banking</h3>
+                <div class="highlight-box">
+                    <h3>Architecture: Apache Kafka + Apache Spark</h3>
+                    <strong>Data Flow:</strong>
+                    <ul>
+                        <li><strong>Ingestion:</strong> Credit card transactions published to Kafka topics in real-time</li>
+                        <li><strong>Processing:</strong> Spark Streaming consumes from Kafka in micro-batches (every 5 seconds)</li>
+                        <li><strong>Analysis:</strong> ML models score each transaction for fraud probability</li>
+                        <li><strong>Action:</strong> High-risk transactions trigger immediate alerts to fraud team</li>
+                        <li><strong>Storage:</strong> All transactions stored in data lake for future analysis</li>
+                    </ul>
+                </div>
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Speed:</strong> Detect fraud within seconds of transaction</li>
+                    <li><strong>Scale:</strong> Process 10,000+ transactions per second</li>
+                    <li><strong>Accuracy:</strong> ML models updated hourly with new fraud patterns</li>
+                    <li><strong>Fault Tolerance:</strong> Kafka ensures no transaction is lost</li>
+                </ul>
+                <div class="speaker-notes" id="notes-22">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Why This Matters:</strong> Credit card fraud costs billions annually. Real-time detection can block fraudulent transactions before they complete.</p>
+                    <p><strong>Kafka's Role:</strong> Acts as buffer between transaction system and fraud detection. Handles millions of messages with low latency.</p>
+                    <p><strong>Spark Streaming:</strong> Consumes messages in small batches. Each batch processed in parallel across cluster. Results in sub-second processing.</p>
+                    <p><strong>ML Models:</strong> Features include: transaction amount, merchant category, time of day, location, recent spending patterns. Model outputs fraud probability 0-100.</p>
+                    <p><strong>Decision Logic:</strong> Score &gt; 90: Block transaction. Score 70-90: Require additional verification. Score &lt; 70: Approve.</p>
+                    <p><strong>Feedback Loop:</strong> When fraud is confirmed, that data trains the next model. Continuous improvement.</p>
+                    <p><strong>Alternative Architectures:</strong> Could use AWS Kinesis + Lambda, or GCP Pub/Sub + Dataflow. Kafka+Spark is battle-tested for high-throughput scenarios.</p>
+                    <p><strong>Challenges:</strong> False positives frustrate customers. False negatives cost money. Balancing act tuned over time.</p>
+                </div>
+            </div>
+
+            <!-- Slide 23: Architecture Comparison -->
+            <div class="slide" data-slide="23">
+                <h2>Architecture Comparison: AWS vs GCP</h2>
+                <div class="comparison-table">
+                    <div class="comparison-row header">
+                        <div>Purpose</div>
+                        <div>AWS Service</div>
+                        <div>GCP Service</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div><strong>Data Lake</strong></div>
+                        <div>Amazon S3</div>
+                        <div>Cloud Storage</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div><strong>Data Warehouse</strong></div>
+                        <div>Amazon Redshift</div>
+                        <div>BigQuery</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div><strong>ETL Service</strong></div>
+                        <div>AWS Glue</div>
+                        <div>Cloud Dataflow</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div><strong>Streaming</strong></div>
+                        <div>Amazon Kinesis</div>
+                        <div>Cloud Pub/Sub</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div><strong>Orchestration</strong></div>
+                        <div>Step Functions / MWAA</div>
+                        <div>Cloud Composer</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div><strong>Big Data Processing</strong></div>
+                        <div>Amazon EMR</div>
+                        <div>Cloud Dataproc</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div><strong>Serverless Compute</strong></div>
+                        <div>AWS Lambda</div>
+                        <div>Cloud Functions</div>
+                    </div>
+                    <div class="comparison-row">
+                        <div><strong>BI &amp; Visualization</strong></div>
+                        <div>QuickSight</div>
+                        <div>Looker / Data Studio</div>
+                    </div>
+                </div>
+                <div class="speaker-notes" id="notes-23">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Service Parity:</strong> Both clouds offer equivalent services for most data engineering needs. The choice often comes down to ecosystem and experience.</p>
+                    <p><strong>S3 vs Cloud Storage:</strong> Very similar. Both offer multiple storage tiers, lifecycle policies, versioning. S3 has more third-party integrations.</p>
+                    <p><strong>Redshift vs BigQuery:</strong> BigQuery is serverless (no cluster management) and often faster for ad-hoc queries. Redshift better for predictable workloads with dedicated resources.</p>
+                    <p><strong>Glue vs Dataflow:</strong> Glue is easier for simple ETL. Dataflow is more powerful for complex streaming and batch unified pipelines.</p>
+                    <p><strong>Cost Comparison:</strong> BigQuery can be cheaper for sporadic queries. Redshift better for constant querying. Always run your own cost analysis.</p>
+                    <p><strong>Which to Choose?:</strong> AWS if you need breadth of services. GCP if you want simplicity and BigQuery. Azure if you're Microsoft-centric.</p>
+                    <p><strong>Multi-Cloud:</strong> Some companies use both - Snowflake on AWS for warehouse, BigQuery for ML, Kafka for streaming. Choose best tool for each job.</p>
+                </div>
+            </div>
+
+            <!-- Slide 24: Modern Data Stack -->
+            <div class="slide" data-slide="24">
+                <h2>The Modern Data Stack</h2>
+                <h3>Complete Ecosystem</h3>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <strong>Data Sources</strong>
+                        <p>Applications, Databases, APIs, SaaS tools (Salesforce, Stripe, Google Analytics)</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Data Ingestion</strong>
+                        <p>Fivetran, Airbyte, Stitch - Automated connectors for 100s of sources</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Data Storage</strong>
+                        <p>Snowflake, BigQuery, Redshift, Databricks - Cloud data warehouses</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Data Transformation</strong>
+                        <p>dbt - SQL-based transformations with testing and documentation</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>BI &amp; Analytics</strong>
+                        <p>Tableau, Looker, Power BI, Mode - Dashboards and exploration</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Orchestration</strong>
+                        <p>Airflow, Prefect, Dagster - Schedule and monitor workflows</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Data Quality</strong>
+                        <p>Great Expectations, Monte Carlo - Automated data testing and monitoring</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Reverse ETL</strong>
+                        <p>Hightouch, Census - Push warehouse data back to operational tools</p>
+                    </div>
+                </div>
+                <div class="speaker-notes" id="notes-24">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Modern Data Stack Philosophy:</strong> Use best-of-breed tools that integrate well. Replace complex monoliths with specialized, composable services.</p>
+                    <p><strong>Ingestion Tools:</strong> Fivetran and Airbyte handle the heavy lifting of extracting data from sources. Pre-built connectors save months of development.</p>
+                    <p><strong>ELT Pattern:</strong> Notice transformation happens AFTER loading. This is the modern approach enabled by powerful cloud warehouses.</p>
+                    <p><strong>dbt's Central Role:</strong> dbt has become the standard for transformations. Works with any warehouse, strong community, excellent documentation.</p>
+                    <p><strong>Orchestration Evolution:</strong> Airflow is still dominant but newer tools like Prefect and Dagster offer better developer experience.</p>
+                    <p><strong>Data Quality:</strong> As data becomes critical for decisions, testing is essential. Great Expectations lets you define expectations and test data automatically.</p>
+                    <p><strong>Reverse ETL:</strong> New category! Take insights from warehouse and push to Salesforce, marketing tools, etc. Close the loop.</p>
+                    <p><strong>Total Cost:</strong> Modern stack can range from $5K/month (small startup) to $500K+/month (enterprise). But way cheaper than building custom.</p>
+                </div>
+            </div>
+
+            <!-- Slide 25: Best Practices -->
+            <div class="slide" data-slide="25">
+                <h2>Data Engineering Best Practices</h2>
+                <ul>
+                    <li><strong>Design for Scalability:</strong> Build systems that can grow from GB to TB to PB</li>
+                    <li><strong>Implement Data Quality Checks:</strong> Test data at every stage of pipeline</li>
+                    <li><strong>Use Version Control:</strong> All code (SQL, Python, config) in Git</li>
+                    <li><strong>Document Everything:</strong> Pipelines, data models, business logic</li>
+                    <li><strong>Monitor Pipeline Performance:</strong> Track execution time, data volume, errors</li>
+                    <li><strong>Security &amp; Access Control:</strong> Encrypt data, implement least-privilege access</li>
+                    <li><strong>Choose Right Tool for Job:</strong> Don't use Spark for small data</li>
+                    <li><strong>Automate Wherever Possible:</strong> Reduce manual work and human error</li>
+                    <li><strong>Build Idempotent Pipelines:</strong> Safe to re-run without duplicating data</li>
+                    <li><strong>Plan for Failure:</strong> Retry logic, alerting, graceful degradation</li>
+                </ul>
+                <div class="speaker-notes" id="notes-25">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Scalability Example:</strong> Design pipeline to handle 1000x current data volume. Use partitioning, avoid hard-coded limits, test with large datasets.</p>
+                    <p><strong>Data Quality:</strong> "Garbage in, garbage out." Test for nulls, duplicates, value ranges, referential integrity. Fail fast when data quality issues detected.</p>
+                    <p><strong>Version Control Benefits:</strong> Track who changed what when. Rollback bad changes. Review code before production. Essential for collaboration.</p>
+                    <p><strong>Documentation Types:</strong> README for setup, inline comments for complex logic, data dictionaries for business users, architecture diagrams for overview.</p>
+                    <p><strong>Monitoring Metrics:</strong> Pipeline duration, row counts, data freshness, error rates, cost per run. Alert when metrics exceed thresholds.</p>
+                    <p><strong>Security Layers:</strong> Encryption at rest and in transit, IAM roles and policies, audit logs, data masking for sensitive fields, compliance requirements (GDPR, HIPAA).</p>
+                    <p><strong>Tool Selection:</strong> For 100MB data, use Python pandas. For 10GB, use SQL in database. For 1TB+, use Spark. Match tool to problem size.</p>
+                    <p><strong>Idempotency:</strong> Running pipeline twice with same input produces same output. Use upserts instead of inserts. Critical for reliable operations.</p>
+                </div>
+            </div>
+
+            <!-- Slide 26: Career Path -->
+            <div class="slide" data-slide="26">
+                <h2>Career Path in Data Engineering</h2>
+                <h3>Essential Skills</h3>
+                <div class="two-column">
+                    <div class="column">
+                        <h3>Technical Skills</h3>
+                        <ul>
+                            <li><strong>Programming:</strong> Python, SQL, Java, Scala</li>
+                            <li><strong>Big Data:</strong> Hadoop, Spark, Kafka</li>
+                            <li><strong>Cloud Platforms:</strong> AWS, GCP, Azure</li>
+                            <li><strong>Databases:</strong> SQL (Postgres, MySQL) and NoSQL (MongoDB, Cassandra)</li>
+                            <li><strong>ETL Tools:</strong> Airflow, dbt, Glue</li>
+                            <li><strong>Version Control:</strong> Git, GitHub</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <h3>Soft Skills</h3>
+                        <ul>
+                            <li>Problem-solving and debugging</li>
+                            <li>Communication with stakeholders</li>
+                            <li>Understanding business requirements</li>
+                            <li>Collaboration with data scientists</li>
+                            <li>Project management</li>
+                            <li>Continuous learning</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3>Career Progression</h3>
+                <div class="architecture-box">
+Junior Data Engineer → Data Engineer → Senior Data Engineer
+    → Lead Data Engineer → Principal Engineer
+    → Data Architect / Engineering Manager
+                </div>
+                <div class="speaker-notes" id="notes-26">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Starting Out:</strong> Focus on SQL mastery and Python first. These are universal. Then learn a cloud platform - AWS or GCP.</p>
+                    <p><strong>Python for Data:</strong> Learn pandas for data manipulation, requests for APIs, boto3 for AWS. Build small ETL scripts.</p>
+                    <p><strong>SQL Depth:</strong> Beyond SELECT - learn window functions, CTEs, query optimization, indexing strategies. SQL is your primary tool.</p>
+                    <p><strong>Cloud Certifications:</strong> AWS Certified Data Analytics or GCP Professional Data Engineer. Valuable for demonstrating knowledge.</p>
+                    <p><strong>Project Portfolio:</strong> Build projects: scrape website data, load to database, create dashboard. Show end-to-end thinking.</p>
+                    <p><strong>Salary Range:</strong> Junior: $70-90K, Mid-level: $100-130K, Senior: $140-180K, Principal: $200K+. Varies by location and company.</p>
+                    <p><strong>Hot Skills:</strong> dbt, Snowflake, Airflow, and Spark are in high demand. Learning these opens many opportunities.</p>
+                    <p><strong>Continuous Learning:</strong> Technology changes fast. Subscribe to data engineering newsletters, follow thought leaders, attend conferences.</p>
+                </div>
+            </div>
+
+            <!-- Slide 27: Summary -->
+            <div class="slide" data-slide="27">
+                <h2>Summary: Key Takeaways</h2>
+                <ul>
+                    <li><strong>Foundation:</strong> Data engineering builds the infrastructure for data-driven decisions</li>
+                    <li><strong>Pipelines:</strong> Automated workflows move data from source to insights</li>
+                    <li><strong>Cloud Platforms:</strong> AWS and GCP provide scalable, managed services</li>
+                    <li><strong>Modern Tools:</strong> Snowflake and dbt simplify complex data tasks</li>
+                    <li><strong>AWS Ecosystem:</strong> S3, Glue, Redshift, Kinesis work together seamlessly</li>
+                    <li><strong>GCP Strengths:</strong> BigQuery's serverless architecture and ML capabilities</li>
+                    <li><strong>Best Practices:</strong> Quality, documentation, monitoring, automation</li>
+                    <li><strong>Skills:</strong> Master SQL and Python, learn cloud platforms, understand data modeling</li>
+                    <li><strong>Growth:</strong> Data engineering field continues to evolve rapidly</li>
+                    <li><strong>Impact:</strong> Your work enables analytics, ML, and business intelligence</li>
+                </ul>
+                <div class="speaker-notes" id="notes-27">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Recap Journey:</strong> We've covered the full spectrum - from fundamental concepts to specific cloud implementations.</p>
+                    <p><strong>Interconnected Ecosystem:</strong> Notice how tools connect: dbt transforms data in Snowflake, which runs on AWS or GCP, orchestrated by Airflow.</p>
+                    <p><strong>Practical Application:</strong> You now understand how companies like Netflix, Spotify, and Airbnb build data infrastructure at scale.</p>
+                    <p><strong>Next Steps for Students:</strong> Start with SQL and Python. Build small projects. Get cloud certifications. Contribute to open source.</p>
+                    <p><strong>Industry Trends:</strong> Watch for real-time analytics, data mesh architecture, and increased focus on data governance.</p>
+                    <p><strong>Final Thought:</strong> Data engineering is the foundation that makes modern business intelligence possible. It's challenging but incredibly rewarding work.</p>
+                </div>
+            </div>
+
+            <!-- Slide 28: Thank You -->
+            <div class="slide" data-slide="28">
+                <div class="thank-you">
+                    <h1>Thank You!</h1>
+                    <p>Questions?</p>
+                    <p style="margin-top: 40px; color: var(--color-primary); font-weight: var(--font-weight-semibold);">Keep Learning, Keep Building</p>
+                </div>
+                <div class="speaker-notes" id="notes-28">
+                    <h4>🎤 Speaker Notes</h4>
+                    <p><strong>Open for Questions:</strong> Common questions to expect:</p>
+                    <p>Q: "Which cloud platform should I learn first?" A: AWS has most jobs, but GCP and Azure are growing. Pick one and go deep.</p>
+                    <p>Q: "Do I need a computer science degree?" A: Helpful but not required. Many successful data engineers come from analytics, science, or are self-taught.</p>
+                    <p>Q: "What's the difference between data engineer and data scientist?" A: Engineers build infrastructure; scientists build models. Both use data differently.</p>
+                    <p><strong>Resources to Share:</strong> Mode Analytics SQL tutorials, AWS free tier for practice, dbt Learn courses, Data Engineering subreddit.</p>
+                    <p><strong>Encouragement:</strong> Data engineering is learnable. Start small, build projects, join communities, stay curious. The field needs talented people!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="nav-buttons">
+                <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+                <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+            </div>
+            <div class="slide-info">
+                <span id="slideNumber">Slide 1 / 28</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <button onclick="toggleNotes()" style="background: var(--color-orange-500);">Toggle Notes (S)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 28;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) { currentSlide = totalSlides; }
+            if (n < 1) { currentSlide = 1; }
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            // Update controls
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            document.getElementById('slideNumber').textContent = `Slide ${currentSlide} / ${totalSlides}`;
+            
+            // Update progress bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        function toggleNotes() {
+            const notes = document.querySelector(`#notes-${currentSlide}`);
+            if (notes) {
+                notes.classList.toggle('visible');
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            } else if (event.key === 'Home') {
+                currentSlide = 1;
+                showSlide(currentSlide);
+            } else if (event.key === 'End') {
+                currentSlide = totalSlides;
+                showSlide(currentSlide);
+            } else if (event.key === 's' || event.key === 'S') {
+                toggleNotes();
+            }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
